@@ -13,4 +13,4 @@ COPY . .
 RUN mkdir -p logs
 
 # Run the API
-CMD ["python", "-m", "api.chatbot_api"]
+CMD ["python", "-m", "chatbot_api"]
