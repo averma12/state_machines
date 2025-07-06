@@ -21,13 +21,6 @@ uvicorn chatbot_api:app \
   --reload \
   --host 0.0.0.0 \
   --port $PORT \
-  --reload-dir chatbot_api \
-  --reload-dir chatbot_builder \
-  --reload-dir chatbot_actions \
-  --reload-dir mongodb_persister \
-  --reload-dir llm_client \
-  --reload-dir config \
-  --reload-dir basic_burr_intro \
   --log-level debug
 
 echo "Uvicorn started on port $PORT"

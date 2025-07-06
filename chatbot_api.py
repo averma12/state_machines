@@ -10,11 +10,13 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-
+from config import settings
+from loguru import logger
 # Import chatbot components
 from chatbot_builder import create_chatbot_application
 from mongodb_persister import MongoDBPersister
 
+logger.add("logs/chatbot_api.log", rotation="10 MB", retention="7 days", level="INFO")
 
 # Create FastAPI app
 app = FastAPI(
@@ -88,9 +90,9 @@ async def health_check():
     try:
         # Test MongoDB connection
         persister = MongoDBPersister(
-            connection_string=os.getenv("MONGODB_URI"),
-            database="chatbot_db",
-            collection="conversation_states"
+            connection_string=settings.MONGODB_URI,
+            database=settings.MONGODB_DATABASE,
+            collection=settings.MONGODB_COLLECTION
         )
         # Try to list collections as a connection test
         _ = persister.db.list_collection_names()
@@ -157,7 +159,7 @@ async def chat_endpoint(request: ChatRequest):
         return ChatResponse(**response_data)
         
     except Exception as e:
-        print(f"Error in chat endpoint: {str(e)}")
+        logger.exception(f"Error in chat endpoint: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
